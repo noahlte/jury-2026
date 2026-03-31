@@ -47,7 +47,8 @@ class Cell {
       this.pos.y = height + this.radius;
     }
   }
-
+  
+  // return la distance entre la cell et une autre cellule dans l'espace
   float trackDistance(Cell otherCell) {
     return dist(this.pos.x, this.pos.y, otherCell.pos.x, otherCell.pos.y);
   }
