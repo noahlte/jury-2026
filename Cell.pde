@@ -8,7 +8,7 @@ class Cell {
   float mass;
   int radius;
   
-  Cell(int x, int y, float mass) {
+  Cell(float x, float y, float mass) {
     this.pos = new PVector(x, y);
     this.vel = new PVector();
     this.acc = new PVector();
@@ -31,6 +31,17 @@ class Cell {
   void show() {
     fill(255);
     noStroke();
-    circle(this.pos.x, this.pos.y, this.radius);
+    circle(this.pos.x, this.pos.y, this.radius * 2);
+  }
+  
+  void checkEdges() {
+    if (this.pos.x > width + this.radius) { this.pos.x = -this.radius; }
+    else if (this.pos.x < -this.radius) { this.pos.x = width + this.radius; }
+    else if (this.pos.y > height + this.radius) { this.pos.y = -this.radius; }
+    else if (this.pos.y < -this.radius) { this.pos.y = height + this.radius; }
+  }
+  
+  float trackDistance(Cell otherCell) {
+    return dist(this.pos.x, this.pos.y, otherCell.pos.x, otherCell.pos.y);
   }
 }
