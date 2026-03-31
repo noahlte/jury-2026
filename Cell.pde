@@ -7,14 +7,16 @@ class Cell {
   // Cell attributes
   float mass;
   int radius;
+  color c;
 
-  Cell(float x, float y, float mass) {
+  Cell(float x, float y, float mass, color c) {
     this.pos = new PVector(x, y);
     this.vel = new PVector();
     this.acc = new PVector();
 
     this.mass = mass;
     this.radius = int(mass) * 2;
+    this.c = c;
   }
 
   void applyForce(PVector force) {
@@ -29,7 +31,7 @@ class Cell {
   }
 
   void show() {
-    fill(255);
+    fill(this.c);
     noStroke();
     circle(this.pos.x, this.pos.y, this.radius * 2);
   }
