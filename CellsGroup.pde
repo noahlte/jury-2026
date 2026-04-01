@@ -13,25 +13,30 @@ class CellsGroup {
     }
   }
 
-  void add(GoodCell cell) {
-    this.cells.add(cell);
+  void addGoodCell(GoodCell cell) {
+    cells.add(cell);
+  }
+  
+  void spawnCell(float radius) {
+    GoodCell newCell = new GoodCell(random(width), height, radius);
+    PVector force = new PVector(random(-2, 2), -10);
+    newCell.applyForce(force);
+    cells.add(newCell);
   }
 
   void update() {
     goodCellFusion();
 
-    for (GoodCell cell : cells) {
+    for (Cell cell : cells) {
       cell.checkEdges();
       cell.update();
-      
+
       if (Config.DEBUG) {
         cell.show();
       }
     }
   }
-  
-  // S'occupe d'appliquer l'algo des metaballs dans le programme 
-  // (Pour chaque pixel, calculez sa couleur en fonction des cellules existantes)
+
   void drawMetaballs() {
     loadPixels();
 
@@ -40,7 +45,7 @@ class CellsGroup {
         int index = x + y * width;
         float sum = 0;
 
-        for (GoodCell c : this.cells) {
+        for (GoodCell c : cells) {
           float d = dist(x, y, c.pos.x, c.pos.y);
           sum += 160 * c.radius / d;
         }
@@ -51,26 +56,21 @@ class CellsGroup {
 
     updatePixels();
   }
-  
-  // Logique de Fusion
+
   void goodCellFusion() {
     GoodCell cellA = null;
     GoodCell cellB = null;
-    
-    // On détecte si deux cellule sont en collision
+
     for (GoodCell firstCell : cells) {
       for (GoodCell otherCell : cells) {
-        if (firstCell != otherCell) {
-          if (firstCell.fusion(otherCell)) {
-            cellA = firstCell;
-            cellB = otherCell;
-            break;
-          }
+        if (firstCell != otherCell && firstCell.fusion(otherCell)) {
+          cellA = firstCell;
+          cellB = otherCell;
+          break;
         }
       }
     }
-    
-    // Si deux cellules sont en collision, on execute la fusion
+
     if (cellA != null && cellB != null) {
       GoodCell newCell = new GoodCell(cellA.pos.x, cellB.pos.y, cellA.mass + cellB.mass);
       PVector momentum = PVector.add(cellA.vel, cellB.vel);

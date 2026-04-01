@@ -1,10 +1,8 @@
 class Cell {
-  // Force attributes
   PVector pos;
   PVector vel;
   PVector acc;
 
-  // Cell attributes
   float mass;
   int radius;
   color c;
@@ -21,35 +19,34 @@ class Cell {
 
   void applyForce(PVector force) {
     force.div(mass);
-    this.vel.add(force);
+    vel.add(force);
   }
 
   void update() {
-    this.pos.add(this.vel);
-    this.vel.add(this.acc);
-    this.acc.mult(0);
+    pos.add(vel);
+    vel.add(acc);
+    acc.mult(0);
   }
 
   void show() {
-    fill(this.c);
+    fill(c);
     noStroke();
-    circle(this.pos.x, this.pos.y, this.radius * 2);
+    circle(pos.x, pos.y, radius * 2);
   }
 
   void checkEdges() {
-    if (this.pos.x > width + this.radius) {
-      this.pos.x = -this.radius;
-    } else if (this.pos.x < -this.radius) {
-      this.pos.x = width + this.radius;
-    } else if (this.pos.y > height + this.radius) {
-      this.pos.y = -this.radius;
-    } else if (this.pos.y < -this.radius) {
-      this.pos.y = height + this.radius;
+    if (pos.x > width + radius) {
+      pos.x = -radius;
+    } else if (pos.x < -radius) {
+      pos.x = width + radius;
+    } else if (pos.y > height + radius) {
+      pos.y = -radius;
+    } else if (pos.y < -radius) {
+      pos.y = height + radius;
     }
   }
   
-  // return la distance entre la cell et une autre cellule dans l'espace
   float trackDistance(Cell otherCell) {
-    return dist(this.pos.x, this.pos.y, otherCell.pos.x, otherCell.pos.y);
+    return dist(pos.x, pos.y, otherCell.pos.x, otherCell.pos.y);
   }
 }
