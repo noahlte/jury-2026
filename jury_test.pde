@@ -1,6 +1,7 @@
 CellsGroup cells;
 
-final int GROUP_SIZE = 0;
+final int GROUP_SIZE = 10;
+PGraphics pg;
 
 void settings() {
   size(Config.SCREEN_WIDTH, Config.SCREEN_HEIGHT);
@@ -15,20 +16,14 @@ void draw() {
 
   cells.drawMetaballs();
   cells.update();
-
-  if (Config.DEBUG) {
-    if (mousePressed) {
-      GoodCell newCell = new GoodCell(mouseX, mouseY, random(10, 20));
-      newCell.applyForce(new PVector(random(0, 2), random(0, 2)).mult(5));
-      cells.addGoodCell(newCell);
-    }
-  }
 }
 
-void keyPressed( ){
+void keyPressed( ) {
   if (key == 'r') {
     cells = new CellsGroup(GROUP_SIZE);
-  } else if (key == ' ') {
-    cells.spawnCell(random(10, 20));
+  } else if (key == 'b') {
+    cells.spawnCell(new BadCell(random(width), height, random(10, 20)));
+  } else if (key == 'g') {
+    cells.spawnCell(new GoodCell(random(width), height, random(10, 20)));
   }
 }
