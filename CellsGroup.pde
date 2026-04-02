@@ -8,28 +8,28 @@ class CellsGroup {
     this.goodCells = new ArrayList<GoodCell>();
     this.badCells = new ArrayList<BadCell>();
 
-    for (int i = 0; i < size; i++) {
-      GoodCell cell = new GoodCell(random(0, width), random(0, height), random(10, 20));
-      cell.applyForce(new PVector(random(0, 2), random(0, 2)).mult(5));
-      goodCells.add(cell);
+    if (Config.DEBUG) {
+      for (int i = 0; i < size; i++) {
+        GoodCell cell = new GoodCell(random(0, width), random(0, height), random(10, 20));
+        cell.applyForce(new PVector(random(0, 2), random(0, 2)).mult(5));
+        goodCells.add(cell);
+      }
     }
   }
-  
-  void spawnCell(GoodCell cell) {
-    PVector force = new PVector(random(-2, 2), random(-20, -10));
+
+  void spawnCell(GoodCell cell, PVector force) {
     cell.applyForce(force);
     goodCells.add(cell);
   }
-  
-  void spawnCell(BadCell cell) {
-    PVector force = new PVector(random(-2, 2), random(-20, -10));
+
+  void spawnCell(BadCell cell, PVector force) {
     cell.applyForce(force);
     badCells.add(cell);
   }
 
   void update() {
     goodCellFusion();
-    //goodCellSplit(); -> Bug a corriger : Eloigner les cellules quand elle se split
+    //goodCellSplit(); // -> Bug a corriger : Eloigner les cellules quand elle se split
 
     for (Cell cell : goodCells) {
       cell.checkEdges();
@@ -39,7 +39,7 @@ class CellsGroup {
         cell.show();
       }
     }
-    
+
     for (Cell cell : badCells) {
       cell.checkEdges();
       cell.update();
@@ -62,7 +62,7 @@ class CellsGroup {
           float d = dist(x, y, c.pos.x, c.pos.y);
           sum += 160 * c.radius / d;
         }
-        
+
         for (BadCell c : badCells) {
           float d = dist(x, y, c.pos.x, c.pos.y);
           sum += 160 * c.radius / d;
@@ -81,7 +81,7 @@ class CellsGroup {
 
     for (GoodCell firstCell : goodCells) {
       for (GoodCell otherCell : goodCells) {
-        if (firstCell != otherCell && firstCell.fusion(otherCell)) {
+        if (firstCell != otherCell && firstCell.canInteract(otherCell)) {
           cellA = firstCell;
           cellB = otherCell;
           break;
@@ -90,23 +90,23 @@ class CellsGroup {
     }
 
     if (cellA != null && cellB != null) {
-      GoodCell newCell = new GoodCell(cellA.pos.x, cellB.pos.y, cellA.mass + cellB.mass);
-      PVector momentum = PVector.add(cellA.vel, cellB.vel);
-      newCell.applyForce(momentum.mult(5));
+      GoodCell newCell = new GoodCell(cellA.pos.x, cellA.pos.y, cellA.mass + cellB.mass);
+      PVector momentum = PVector.add(cellA.vel, cellB.vel).mult(3);
 
-      goodCells.add(newCell);
+      spawnCell(newCell, momentum);
+
       goodCells.remove(cellA);
       goodCells.remove(cellB);
     }
   }
-  
+
   void goodCellSplit() {
     BadCell cellA = null;
     GoodCell cellB = null;
 
     for (BadCell firstCell : badCells) {
       for (GoodCell otherCell : goodCells) {
-        if (firstCell.split(otherCell)) {
+        if (firstCell.canInteract(otherCell) && otherCell.radius >= Config.MIN_SPLIT_SIZE) {
           cellA = firstCell;
           cellB = otherCell;
           break;
@@ -115,19 +115,16 @@ class CellsGroup {
     }
 
     if (cellA != null && cellB != null) {
-      GoodCell newCell1 = new GoodCell(cellA.pos.x, cellB.pos.y, cellB.mass / 2);
-      GoodCell newCell2 = new GoodCell(cellA.pos.x, cellB.pos.y, cellB.mass / 2);
-      
+      GoodCell newCell1 = new GoodCell(cellB.pos.x, cellB.pos.y, cellB.mass / 2);
+      GoodCell newCell2 = new GoodCell(cellB.pos.x, cellB.pos.y, cellB.mass / 2);
+
       PVector momentum = PVector.add(cellA.vel, cellB.vel);
-      
-      newCell1.applyForce(momentum.mult(5));
-      newCell2.applyForce(momentum.mult(-5));
 
       goodCells.remove(cellB);
       badCells.remove(cellA);
-      
-      goodCells.add(newCell1);
-      goodCells.add(newCell2);
+
+      spawnCell(newCell1, momentum.mult(5));
+      spawnCell(newCell2, momentum.mult(-5));
     }
   }
 }

@@ -1,6 +1,9 @@
 class Config {
-  // -- DEBUG --
+  // -- GENERAL --
+  static final String VERSION = "v0.0.4";
+  static final String TITLE = "Jury 2026 - " + VERSION;
   static final boolean DEBUG = false;
+  static final int OSC_PORT = 8000;
   
   
   // -- SCREEN --
@@ -11,4 +14,7 @@ class Config {
   static final int COL_BACKGROUND = #000000;
   static final int COL_GOODCELL = #44CE1B;
   static final int COL_BADCELL = #FF0000;
+  
+  // -- CELL --
+  static final int MIN_SPLIT_SIZE = 5;
 }
