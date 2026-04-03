@@ -3,8 +3,8 @@ class Config {
   static final String VERSION = "v0.0.4";
   static final String TITLE = "Jury 2026 - " + VERSION;
   static final boolean DEBUG = false;
-  static final int OSC_PORT = 8000;
-  
+  static final int SERIAL_PORT = 9600;
+  static final String PORT_NAME = "/dev/ttyACM0";
   
   // -- SCREEN --
   static final int SCREEN_WIDTH = 400;

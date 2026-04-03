@@ -8,12 +8,11 @@ class CellsGroup {
     this.goodCells = new ArrayList<GoodCell>();
     this.badCells = new ArrayList<BadCell>();
 
-    if (Config.DEBUG) {
-      for (int i = 0; i < size; i++) {
-        GoodCell cell = new GoodCell(random(0, width), random(0, height), random(10, 20));
-        cell.applyForce(new PVector(random(0, 2), random(0, 2)).mult(5));
-        goodCells.add(cell);
-      }
+
+    for (int i = 0; i < size; i++) {
+      GoodCell cell = new GoodCell(random(0, width), random(0, height), random(10, 20));
+      cell.applyForce(new PVector(random(0, 2), random(0, 2)).mult(5));
+      goodCells.add(cell);
     }
   }
 
